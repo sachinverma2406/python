@@ -1,0 +1,23 @@
+designer = SACHIN
+pip install ttkbootstrap
+
+import tkinter as tk
+from ttkbootstrap import Style
+
+def on_button_click():
+    print("Button Clicked!")
+
+# Create the main window
+root = tk.Tk()
+root.title("Modern Button Example")
+root.geometry("300x200")
+
+# Apply the bootstrap style
+style = Style(theme="flatly")  # You can choose different themes
+
+# Create a modern button
+modern_button = style.button("Click Me", bootstyle="success", command=on_button_click)
+modern_button.pack(pady=50)
+
+# Run the application
+root.mainloop()
