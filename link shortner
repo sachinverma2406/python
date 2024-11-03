@@ -1,0 +1,73 @@
+
+pyhton code =
+
+pip install Flask
+
+
+from flask import Flask, request, redirect, render_template
+import random
+import string
+
+app = Flask(__name__)
+
+# Dictionary to store short links
+url_mapping = {}
+
+def generate_short_link(length=6):
+    """Generate a random short link."""
+    return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+@app.route('/shorten', methods=['POST'])
+def shorten():
+    original_url = request.form['url']
+    short_link = generate_short_link()
+    
+    while short_link in url_mapping:
+        short_link = generate_short_link()  # Ensure the short link is unique
+    
+    url_mapping[short_link] = original_url
+    return render_template('result.html', short_link=short_link)
+
+@app.route('/<short_link>')
+def redirect_link(short_link):
+    original_url = url_mapping.get(short_link)
+    if original_url:
+        return redirect(original_url)
+    return "URL not found", 404
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+html=
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Shortener</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+</head>
+<body>
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Link Shortener</h1>
+            <form action="/shorten" method="POST">
+                <div class="field">
+                    <label class="label">Enter URL</label>
+                    <div class="control">
+                        <input class="input" type="url" name="url" required placeholder="https://example.com">
+                    </div>
+                </div>
+                <div class="control">
+                    <button class="button is-primary" type="submit">Shorten</button>
+                </div>
+            </form>
+        </div>
+    </section>
+</body>
+</html>
+
